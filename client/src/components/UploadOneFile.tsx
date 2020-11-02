@@ -21,6 +21,7 @@ const UploadOneFile: React.FC<unknown> = () => {
       name="demo"
       customUpload
       uploadHandler={(e) => handleUpload(e, uploadFile)}
+      auto
     />
   );
 };

@@ -127,6 +127,11 @@ const Products: React.FC<unknown> = () => {
             />
           </div>
         </div>
+        <div className="p-fluid p-formgrid p-grid">
+          <div className="p-field p-col">
+            <input type="file" />
+          </div>
+        </div>
       </Dialog>
     </div>
   );

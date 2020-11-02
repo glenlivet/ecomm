@@ -7,9 +7,11 @@ import 'primeflex/primeflex.css';
 import './App.css';
 
 import Products from './components/Products';
+import ProductEdit from './components/ProductEdit';
 
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import { createUploadLink } from 'apollo-upload-client';
+import UploadOneFile from './components/UploadOneFile';
 
 const client = new ApolloClient({
   uri: process.env.REACT_APP_GRAPHQL_URL,
@@ -23,6 +25,9 @@ const App: React.FC<unknown> = () => {
       <Router>
         <div className="App">
           <Switch>
+            <Route path="/products/edit">
+              <ProductEdit />
+            </Route>
             <Route path="/products">
               <Products />
             </Route>

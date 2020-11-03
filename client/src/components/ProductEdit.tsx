@@ -1,10 +1,12 @@
 import React, { useReducer } from 'react';
 import { gql, useMutation } from '@apollo/client';
-import { FileUpload } from 'primereact/fileupload';
 import { ProductInput } from '../../generated/globalTypes';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { InputTextarea } from 'primereact/inputtextarea';
+import FileUpload from './FileUpload';
+
+import './ProductEdit.scss';
 
 type ActionType = {
   type: string;
@@ -29,57 +31,62 @@ const ProductEdit: React.FC<propsType> = (props: propsType) => {
     product: { ...(props.product || {}) },
   });
   return (
-    <div className="m-product-edit">
-      <div className="p-fluid p-formgrid p-grid">
-        <div className="p-field p-col">
-          <label htmlFor="prod-dlg-name">Name</label>
-          <InputText
-            id="prod-dlg-name"
-            type="text"
-            value={state.product.name}
-            onChange={(e) =>
-              dispatch({
-                type: 'update-product',
-                payload: { name: (e.target as HTMLInputElement).value },
-              })
-            }
-          />
-        </div>
-        <div className="p-field p-col">
-          <label htmlFor="prod-dlg-code">Code</label>
-          <InputText
-            id="prod-dlg-code"
-            type="text"
-            value={state.product.code}
-            onChange={(e) =>
-              dispatch({
-                type: 'update-product',
-                payload: { code: (e.target as HTMLInputElement).value },
-              })
-            }
-          />
-        </div>
-      </div>
-      <div className="p-fluid p-formgrid p-grid">
-        <div className="p-field p-col">
-          <label htmlFor="prod-dlg-desc">Description</label>
-          <InputTextarea
-            id="prod-dlg-desc"
-            rows={3}
-            value={state.product.description}
-            onChange={(e) =>
-              dispatch({
-                type: 'update-product',
-                payload: { code: (e.target as HTMLTextAreaElement).value },
-              })
-            }
-            autoResize
-          />
-        </div>
-      </div>
-      <div className="p-fluid p-formgrid p-grid">
-        <Button label="New" icon="pi pi-plus" className="p-mr-2" />
+    <div className="m-product-edit p-m-5">
+      <div className="m-action-bar p-d-flex p-flex-row-reverse p-mb-4">
         <Button label="Delete" icon="pi pi-times" className="p-mr-2" />
+        <Button label="Save" icon="pi pi-plus" className="p-mr-2" />
+      </div>
+      <div className="m-edit-form">
+        <div className="m-form-row p-fluid p-formgrid p-grid">
+          <div className="p-field p-col">
+            <label htmlFor="prod-dlg-name">Name</label>
+            <InputText
+              id="prod-dlg-name"
+              type="text"
+              value={state.product.name}
+              onChange={(e) =>
+                dispatch({
+                  type: 'update-product',
+                  payload: { name: (e.target as HTMLInputElement).value },
+                })
+              }
+            />
+          </div>
+          <div className="p-field p-col">
+            <label htmlFor="prod-dlg-code">Code</label>
+            <InputText
+              id="prod-dlg-code"
+              type="text"
+              value={state.product.code}
+              onChange={(e) =>
+                dispatch({
+                  type: 'update-product',
+                  payload: { code: (e.target as HTMLInputElement).value },
+                })
+              }
+            />
+          </div>
+        </div>
+        <div className="m-form-row p-fluid p-formgrid p-grid">
+          <div className="p-field p-col">
+            <label htmlFor="prod-dlg-desc">Description</label>
+            <InputTextarea
+              id="prod-dlg-desc"
+              rows={3}
+              value={state.product.description}
+              onChange={(e) =>
+                dispatch({
+                  type: 'update-product',
+                  payload: { code: (e.target as HTMLTextAreaElement).value },
+                })
+              }
+              autoResize
+            />
+          </div>
+        </div>
+        <div className="m-form-row p-fluid p-formgrid p-grid">
+          <FileUpload />
+        </div>
       </div>
     </div>
   );

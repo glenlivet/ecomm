@@ -1,37 +1,61 @@
 import React, { MutableRefObject, useEffect, useRef, useState } from 'react';
+import classnames from 'classnames';
 import './FileUpload.scss';
 
-const FileUpload: React.FC<unknown> = () => {
-  const wrapper: MutableRefObject<null | HTMLDivElement> = useRef(null);
-  const fileInput: MutableRefObject<null | HTMLInputElement> = useRef(null);
+type propsType = {
+  className?: string;
+  onChange: (f: File | null) => void;
+};
+const FileUpload: React.FC<propsType> = ({ className, onChange }: propsType) => {
+  //variables
+  const wrapperEle: MutableRefObject<null | HTMLDivElement> = useRef(null);
+  const fileEle: MutableRefObject<null | HTMLInputElement> = useRef(null);
+  const imgEle: MutableRefObject<null | HTMLImageElement> = useRef(null);
   const [file, setFile] = useState(null as File | null);
+
   useEffect(() => {
-    const wrapperOnClick = () => {
-      (fileInput.current as HTMLInputElement).click();
-    };
-    const fileInputOnInput = (e: Event) => {
-      const files = (e.target as HTMLInputElement).files;
-      if (files && files.length) {
-        setFile(files.item(0));
-      }
-    };
-    if (wrapper.current && fileInput.current) {
-      wrapper.current.style.cursor = 'pointer';
-      wrapper.current.addEventListener('click', wrapperOnClick);
-      fileInput.current.addEventListener('change', fileInputOnInput);
+    if (wrapperEle.current && fileEle.current) {
+      //enable div click to upload file.
+      const wrapperElement = wrapperEle.current;
+      const fileElement = fileEle.current;
+      const wrapperEleOnClick = () => {
+        fileElement.click();
+      };
+      const fileEleOnInput = (e: Event) => {
+        const files = (e.target as HTMLInputElement).files;
+        if (files && files.length) {
+          setFile(files.item(0));
+          onChange(files.item(0));
+        }
+      };
+      wrapperEle.current.style.cursor = 'pointer';
+      wrapperElement.addEventListener('click', wrapperEleOnClick);
+      fileElement.addEventListener('change', fileEleOnInput);
       return () => {
-        if (wrapper.current) {
-          wrapper.current.removeEventListener('click', wrapperOnClick);
-        }
-        if (fileInput.current) {
-          fileInput.current.removeEventListener('change', fileInputOnInput);
-        }
+        wrapperElement.removeEventListener('click', wrapperEleOnClick);
+        fileElement.removeEventListener('change', fileEleOnInput);
+      };
+    }
+    if (imgEle.current) {
+      //enable image preview
+      const imgElem = imgEle.current;
+      const fileReader = new FileReader();
+      fileReader.onload = (e: ProgressEvent<FileReader>) => {
+        imgElem.setAttribute('src', (e.target as FileReader).result as string);
+      };
+      fileReader.readAsDataURL(file as File);
+      return () => {
+        fileReader.onload = null;
       };
     }
   });
+  const wrapperClass = classnames('m-file-upload', className, {
+    'pi pi-plus p-text-center': !file,
+  });
   return (
-    <div ref={wrapper} className="m-file-upload pi pi-plus p-text-center">
-      <input ref={fileInput} className="m-hidden" type="file" />
+    <div ref={wrapperEle} className={wrapperClass}>
+      {!file && <input ref={fileEle} className="m-hidden" type="file" />}
+      {file && <img ref={imgEle} alt="Image Preview." className="m-preview" />}
     </div>
   );
 };

@@ -85,7 +85,11 @@ const ProductEdit: React.FC<propsType> = (props: propsType) => {
           </div>
         </div>
         <div className="m-form-row p-fluid p-formgrid p-grid">
-          <FileUpload />
+          <FileUpload
+            onChange={(f) => {
+              console.log(f);
+            }}
+          />
         </div>
       </div>
     </div>
